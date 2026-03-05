@@ -162,6 +162,16 @@ backup.tar.gz
   - `/run/docker.sock`
 - For production workloads: always test with `plan` + `--dry-run` first
 
+### macOS target notes
+
+- `dockermigrate-darwin-amd64` runs on Intel Macs.
+- On Apple Silicon (M1/M2/M3), use a native arm64 build (`darwin-arm64`) for best compatibility/performance.
+- Docker Desktop on macOS runs containers in a VM; Linux host paths are not directly portable.
+- Prefer a macOS path for restore, e.g.:
+  - `--bind-root /Users/<user>/docker-restore`
+- Ensure restore target paths are allowed in Docker Desktop file sharing settings.
+- Some Linux networking modes/features (especially `host`) may behave differently on macOS.
+
 ### Release artifacts
 
 - `dockermigrate-linux-amd64`
@@ -331,6 +341,16 @@ backup.tar.gz
   - `/var/run/docker.sock`
   - `/run/docker.sock`
 - Für Produktion immer erst mit `plan` + `--dry-run` testen
+
+### Hinweise für macOS als Zielsystem
+
+- `dockermigrate-darwin-amd64` ist für Intel-Macs.
+- Für Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
+- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 übertragbar.
+- Für Restore besser einen macOS-Pfad verwenden, z. B.:
+  - `--bind-root /Users/<user>/docker-restore`
+- Prüfen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
+- Einige Linux-Netzwerkmodi/-Features (v. a. `host`) verhalten sich auf macOS anders.
 
 ### Release-Artefakte
 
