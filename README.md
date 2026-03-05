@@ -1,61 +1,51 @@
 # Docker Migration Tool (`dockermigrate`)
 
-Ein CLI-Tool zum Migrieren von Docker-Containern zwischen Hosts – inkl.:
+## English
 
-- Container-Konfiguration (`docker inspect`)
+A CLI tool to migrate Docker containers between hosts, including:
+
+- Container configuration (`docker inspect`)
 - Images
-- Named Volumes
-- Bind-Mount-Daten (optional/standardmäßig aktiv)
-- Netzwerk-Rekonstruktion (Custom Networks)
+- Named volumes
+- Bind mount data
+- Custom network recreation
 
-> Entwickelt für: "Backup auf Host A" → "Restore auf Host B".
+Designed for: **backup on host A** → **restore on host B**.
 
----
+### Features
 
-## Features
-
-- **Plan-Modus** vor jedem Lauf (`plan`)
-- **Dry-Run** für Backup/Restore
-- **Verify** für Backup-Archive (`backup --verify`, `verify --in ...`)
-- **Bind-Mount Policy**: Restore verlangt `--bind-root`, wenn Bind-Mounts im Backup enthalten sind
-- **Dedup von Bind-Backups** (identische Host-Pfade werden nur einmal gesichert)
-- **Restore inkl. zusätzlicher Container-Optionen**:
-  - Labels
-  - User
-  - Workdir
-  - Network Mode + Multi-Network Reconnect
-  - Extra Hosts
+- Planning before execution (`plan`)
+- Dry-run for backup/restore
+- Archive verification (`backup --verify`, `verify --in ...`)
+- Bind policy: restore requires `--bind-root` if bind mounts are in backup
+- Bind deduplication (same host path archived once)
+- Extended restore support:
+  - Labels, User, Workdir
+  - Network mode + multi-network reconnect
+  - Extra hosts
   - CapAdd / CapDrop
-- **Optionales Pull fehlender Images** beim Restore (`--pull-missing-images`)
+- Optional pull of missing images (`--pull-missing-images`)
 
----
+### Requirements
 
-## Voraussetzungen
+- Docker CLI + running Docker daemon
+- Go (only required to build locally)
 
-- Docker CLI + laufender Docker Daemon
-- Go (nur zum lokalen Kompilieren nötig)
-
----
-
-## Build
-
-### Lokales Build
+### Build
 
 ```bash
 go build -o dockermigrate main.go
 ```
 
-### Multi-OS Build (Linux/macOS/Windows)
+Multi-OS build:
 
 ```bash
 bash scripts/build-release.sh
 ```
 
-Erzeugte Dateien liegen in `releases/`.
+Artifacts are written to `releases/`.
 
----
-
-## CLI Übersicht
+### CLI
 
 ```text
 dockermigrate backup   --out backup.tar.gz [--containers c1,c2 | --all | --label key=value]
@@ -72,44 +62,34 @@ dockermigrate verify   --in backup.tar.gz
 dockermigrate version
 ```
 
----
+### Commands
 
-## Befehle im Detail
-
-## `ls`
-Zeigt Container mit Image + Anzahl Volume/Bind-Mounts.
-
+#### `ls`
 ```bash
 ./dockermigrate ls
 ./dockermigrate ls --all
 ```
 
-## `plan`
-Zeigt, was gesichert würde (Container, Images, Volumes, Binds).
-
+#### `plan`
 ```bash
 ./dockermigrate plan --containers adguardhome
 ./dockermigrate plan --all --json
 ./dockermigrate plan --label com.migrate=true
 ```
 
-## `backup`
-Erzeugt ein `.tar.gz`-Archiv.
-
+#### `backup`
 ```bash
 ./dockermigrate backup --out backup.tar.gz --containers adguardhome
 ```
 
-### Nützliche Optionen
+Useful options:
+- `--dry-run`
+- `--verify`
+- Default behavior: running selected containers are stopped before backup and remain stopped
+- `--no-stop` to skip stopping
+- `--bind-exclude` (repeatable)
 
-- `--dry-run` → nur Vorschau
-- `--verify` → Archiv nach dem Schreiben validieren
-- Standardverhalten: laufende selektierte Container werden vor Backup gestoppt und bleiben gestoppt
-- `--no-stop` → kein Stop vor Backup (nur wenn explizit gewünscht)
-- `--bind-exclude` (repeatable) → Hostpfade/Pattern aus Binds ausschließen
-
-Beispiel:
-
+Example:
 ```bash
 ./dockermigrate backup \
   --out backup.tar.gz \
@@ -119,33 +99,25 @@ Beispiel:
   --verify
 ```
 
-## `verify`
-Prüft ein existierendes Backup-Archiv auf Konsistenz (Manifest + referenzierte Dateien).
-
+#### `verify`
 ```bash
 ./dockermigrate verify --in backup.tar.gz
 ```
 
-## `restore`
-Stellt Container aus einem Backup wieder her.
-
+#### `restore`
 ```bash
 ./dockermigrate restore --in backup.tar.gz --bind-root /
 ```
 
-### Wichtige Restore-Hinweise
-
-- Wenn der Ziel-Containername schon existiert, wird er durch `docker rm -f <name>` ersetzt.
-- Falls Binds im Backup enthalten sind, ist `--bind-root` Pflicht.
-- Spiegelung der Bind-Pfade erfolgt unterhalb von `bind-root`.
-  - Beispiel: Quelle `/data/app/config`, `--bind-root /` → Ziel `/data/app/config`
-  - Beispiel: Quelle `/data/app/config`, `--bind-root /restore-root` → Ziel `/restore-root/data/app/config`
-- Mit `--pull-missing-images` werden fehlende Images nach `docker load` automatisch gepullt.
-- Für systemnahe Zielpfade (z. B. `/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
+Restore notes:
+- Existing target containers are replaced (`docker rm -f <name>`)
+- `--bind-root` is required when binds are present
+- Bind path mirroring happens under `bind-root`
+- `--pull-missing-images` pulls missing images after `docker load`
+- For system-level paths (`/data`, `/opt`, `/var/lib/...`), elevated privileges are often required:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
-Beispiel:
-
+Example:
 ```bash
 ./dockermigrate restore \
   --in backup.tar.gz \
@@ -153,27 +125,21 @@ Beispiel:
   --pull-missing-images
 ```
 
-## Reales Testbeispiel (adguardhome)
-
-Die folgenden Befehle wurden im Live-Test verwendet:
+### Real test example (adguardhome)
 
 ```bash
-# Live-Backup (mit Verify)
 ./dockermigrate backup \
   --out /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
   --containers adguardhome \
   --verify
 
-# Restore aus genau diesem Backup
 ./dockermigrate restore \
   --in /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
   --bind-root / \
   --pull-missing-images
 ```
 
----
-
-## Archiv-Struktur
+### Archive structure
 
 ```text
 backup.tar.gz
@@ -188,24 +154,186 @@ backup.tar.gz
     └── _<host_path_as_filename>.tar
 ```
 
----
+### Security / Operations
 
-## Sicherheits-/Betriebshinweise
-
-- Tar-Extraction ist gegen Path Traversal abgesichert.
-- Standardmäßig werden Docker-Socket-Binds ausgeschlossen:
+- Tar extraction is hardened against path traversal
+- Docker socket binds are excluded by default:
   - `/var/run/docker.sock`
   - `/run/docker.sock`
-- Für produktive Workloads erst mit `plan` + `--dry-run` testen.
+- For production workloads: always test with `plan` + `--dry-run` first
 
----
-
-## Release Artefakte
-
-Die Multi-OS Binaries werden unter `releases/` erzeugt:
+### Release artifacts
 
 - `dockermigrate-linux-amd64`
 - `dockermigrate-darwin-amd64`
 - `dockermigrate-windows-amd64.exe`
 
-(Architektur/Targets sind im Build-Script anpassbar.)
+---
+
+## Deutsch
+
+Ein CLI-Tool zur Migration von Docker-Containern zwischen Hosts, inklusive:
+
+- Container-Konfiguration (`docker inspect`)
+- Images
+- Named Volumes
+- Bind-Mount-Daten
+- Rekonstruktion von Custom Networks
+
+Zielbild: **Backup auf Host A** → **Restore auf Host B**.
+
+### Funktionen
+
+- Plan-Modus vor Ausführung (`plan`)
+- Dry-Run für Backup/Restore
+- Archiv-Validierung (`backup --verify`, `verify --in ...`)
+- Bind-Policy: Restore benötigt `--bind-root`, wenn Bind-Mounts enthalten sind
+- Dedup für Binds (gleicher Host-Pfad wird einmal archiviert)
+- Erweiterter Restore:
+  - Labels, User, Workdir
+  - Network Mode + Multi-Network Reconnect
+  - Extra Hosts
+  - CapAdd / CapDrop
+- Optionales Nachziehen fehlender Images (`--pull-missing-images`)
+
+### Voraussetzungen
+
+- Docker CLI + laufender Docker-Daemon
+- Go (nur fürs lokale Build)
+
+### Build
+
+```bash
+go build -o dockermigrate main.go
+```
+
+Multi-OS Build:
+
+```bash
+bash scripts/build-release.sh
+```
+
+Artefakte liegen in `releases/`.
+
+### CLI
+
+```text
+dockermigrate backup   --out backup.tar.gz [--containers c1,c2 | --all | --label key=value]
+                      [--include-binds] [--bind-exclude PATTERN ...] [--dry-run]
+                      [--no-stop] [--verify]
+
+dockermigrate restore  --in backup.tar.gz --bind-root /some/root [--dry-run] [--pull-missing-images]
+
+dockermigrate plan     [--containers c1,c2 | --all | --label key=value]
+                      [--include-binds] [--bind-exclude PATTERN ...] [--json]
+
+dockermigrate ls       [--all]
+dockermigrate verify   --in backup.tar.gz
+dockermigrate version
+```
+
+### Befehle
+
+#### `ls`
+```bash
+./dockermigrate ls
+./dockermigrate ls --all
+```
+
+#### `plan`
+```bash
+./dockermigrate plan --containers adguardhome
+./dockermigrate plan --all --json
+./dockermigrate plan --label com.migrate=true
+```
+
+#### `backup`
+```bash
+./dockermigrate backup --out backup.tar.gz --containers adguardhome
+```
+
+Nützliche Optionen:
+- `--dry-run`
+- `--verify`
+- Standard: laufende, selektierte Container werden vor Backup gestoppt und bleiben gestoppt
+- `--no-stop` für Backup ohne Stop
+- `--bind-exclude` (mehrfach nutzbar)
+
+Beispiel:
+```bash
+./dockermigrate backup \
+  --out backup.tar.gz \
+  --containers app,db \
+  --no-stop \
+  --bind-exclude "/tmp" --bind-exclude "*cache*" \
+  --verify
+```
+
+#### `verify`
+```bash
+./dockermigrate verify --in backup.tar.gz
+```
+
+#### `restore`
+```bash
+./dockermigrate restore --in backup.tar.gz --bind-root /
+```
+
+Restore-Hinweise:
+- Existierende Ziel-Container werden ersetzt (`docker rm -f <name>`)
+- `--bind-root` ist Pflicht, wenn Bind-Mounts enthalten sind
+- Bind-Pfade werden unterhalb von `bind-root` gespiegelt
+- `--pull-missing-images` zieht fehlende Images nach `docker load`
+- Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
+  - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
+
+Beispiel:
+```bash
+./dockermigrate restore \
+  --in backup.tar.gz \
+  --bind-root / \
+  --pull-missing-images
+```
+
+### Reales Testbeispiel (adguardhome)
+
+```bash
+./dockermigrate backup \
+  --out /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --containers adguardhome \
+  --verify
+
+./dockermigrate restore \
+  --in /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --bind-root / \
+  --pull-missing-images
+```
+
+### Archiv-Struktur
+
+```text
+backup.tar.gz
+├── manifest.json
+├── containers/
+│   └── <container>.inspect.json
+├── images/
+│   └── images.tar
+├── volumes/
+│   └── <volume>.tar
+└── binds/
+    └── _<host_path_as_filename>.tar
+```
+
+### Sicherheit / Betrieb
+
+- Tar-Extraction ist gegen Path Traversal abgesichert
+- Docker-Socket-Binds werden standardmäßig ausgeschlossen:
+  - `/var/run/docker.sock`
+  - `/run/docker.sock`
+- Für Produktion immer erst mit `plan` + `--dry-run` testen
+
+### Release-Artefakte
+
+- `dockermigrate-linux-amd64`
+- `dockermigrate-darwin-amd64`
+- `dockermigrate-windows-amd64.exe`
