@@ -37,6 +37,20 @@
 ./dockermigrate restore --in backup.tar.gz --bind-root / --pull-missing-images
 ```
 
+## Reales Testbeispiel (adguardhome)
+
+```bash
+./dockermigrate backup \
+  --out /home/matthias/.openclaw/workspace/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --containers adguardhome \
+  --verify
+
+./dockermigrate restore \
+  --in /home/matthias/.openclaw/workspace/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --bind-root / \
+  --pull-missing-images
+```
+
 ## Hinweis
 
 Wenn der Ziel-Container bereits existiert, wird er beim Restore ersetzt (`docker rm -f <name>`).
