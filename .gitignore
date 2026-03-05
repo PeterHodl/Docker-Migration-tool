@@ -1,0 +1,9 @@
+# Local builds
+/dockermigrate
+
+# Test backups
+/*-backup-*.tar.gz
+
+# Optional local temp files
+*.tmp
+*.log
