@@ -176,6 +176,7 @@ backup.tar.gz
 
 - `dockermigrate-linux-amd64`
 - `dockermigrate-darwin-amd64`
+- `dockermigrate-darwin-arm64`
 - `dockermigrate-windows-amd64.exe`
 
 ---
@@ -356,4 +357,5 @@ backup.tar.gz
 
 - `dockermigrate-linux-amd64`
 - `dockermigrate-darwin-amd64`
+- `dockermigrate-darwin-arm64`
 - `dockermigrate-windows-amd64.exe`
