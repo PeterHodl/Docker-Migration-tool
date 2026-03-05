@@ -141,6 +141,8 @@ Stellt Container aus einem Backup wieder her.
   - Beispiel: Quelle `/data/app/config`, `--bind-root /` → Ziel `/data/app/config`
   - Beispiel: Quelle `/data/app/config`, `--bind-root /restore-root` → Ziel `/restore-root/data/app/config`
 - Mit `--pull-missing-images` werden fehlende Images nach `docker load` automatisch gepullt.
+- Für systemnahe Zielpfade (z. B. `/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
+  - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
 Beispiel:
 

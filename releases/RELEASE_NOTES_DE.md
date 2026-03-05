@@ -55,3 +55,8 @@
 
 Wenn der Ziel-Container bereits existiert, wird er beim Restore ersetzt (`docker rm -f <name>`).
 Wenn Bind-Mounts im Backup enthalten sind, ist `--bind-root` beim Restore Pflicht.
+Für systemnahe Zielpfade (z. B. `/data`, `/opt`, `/var/lib/...`) ist Restore häufig nur mit erhöhten Rechten möglich:
+
+```bash
+sudo ./dockermigrate restore --in backup.tar.gz --bind-root /
+```

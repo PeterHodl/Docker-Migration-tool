@@ -55,3 +55,8 @@
 
 If a target container already exists, restore replaces it (`docker rm -f <name>`).
 If bind mounts are present in the backup, `--bind-root` is required during restore.
+For system-level target paths (e.g. `/data`, `/opt`, `/var/lib/...`), restore often requires elevated privileges:
+
+```bash
+sudo ./dockermigrate restore --in backup.tar.gz --bind-root /
+```

@@ -55,3 +55,8 @@ chmod +x dockermigrate-<os>-amd64
 
 - Wenn ein Ziel-Container schon existiert, wird er beim Restore ersetzt (`docker rm -f`).
 - Bei Backups mit Bind-Mounts ist `--bind-root` beim Restore Pflicht.
+- Für systemnahe Zielpfade (z. B. `/data`, `/opt`, `/var/lib/...`) ist Restore häufig nur mit erhöhten Rechten möglich:
+
+```bash
+sudo ./dockermigrate restore --in backup.tar.gz --bind-root /
+```
