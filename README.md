@@ -60,7 +60,7 @@ Erzeugte Dateien liegen in `releases/`.
 ```text
 dockermigrate backup   --out backup.tar.gz [--containers c1,c2 | --all | --label key=value]
                       [--include-binds] [--bind-exclude PATTERN ...] [--dry-run]
-                      [--stop-first] [--stop-timeout 30] [--verify]
+                      [--no-stop] [--verify]
 
 dockermigrate restore  --in backup.tar.gz --bind-root /some/root [--dry-run] [--pull-missing-images]
 
@@ -104,8 +104,8 @@ Erzeugt ein `.tar.gz`-Archiv.
 
 - `--dry-run` → nur Vorschau
 - `--verify` → Archiv nach dem Schreiben validieren
-- `--stop-first` → selektierte laufende Container vorher stoppen und danach wieder starten
-- `--stop-timeout 30` → Timeout für `docker stop`
+- Standardverhalten: laufende selektierte Container werden vor Backup gestoppt und bleiben gestoppt
+- `--no-stop` → kein Stop vor Backup (nur wenn explizit gewünscht)
 - `--bind-exclude` (repeatable) → Hostpfade/Pattern aus Binds ausschließen
 
 Beispiel:
@@ -114,7 +114,7 @@ Beispiel:
 ./dockermigrate backup \
   --out backup.tar.gz \
   --containers app,db \
-  --stop-first --stop-timeout 20 \
+  --no-stop \
   --bind-exclude "/tmp" --bind-exclude "*cache*" \
   --verify
 ```

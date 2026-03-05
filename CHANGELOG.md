@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.0
+
+- Changed backup default behavior:
+  - selected running containers are stopped before backup
+  - containers remain stopped after backup
+- Removed `--stop-first` and `--stop-timeout`
+- Added `--no-stop` to explicitly skip stopping containers
+
 ## v0.8.0
 
 - Added optional image pull during restore:
