@@ -158,13 +158,13 @@ Die folgenden Befehle wurden im Live-Test verwendet:
 ```bash
 # Live-Backup (mit Verify)
 ./dockermigrate backup \
-  --out /home/matthias/.openclaw/workspace/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --out /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
   --containers adguardhome \
   --verify
 
 # Restore aus genau diesem Backup
 ./dockermigrate restore \
-  --in /home/matthias/.openclaw/workspace/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
+  --in /home/user/projects/dockermigrate/adguardhome-backup-2026-03-05-1819.tar.gz \
   --bind-root / \
   --pull-missing-images
 ```
