@@ -10,7 +10,7 @@ A CLI tool to migrate Docker containers between hosts, including:
 - Bind mount data
 - Custom network recreation
 
-Designed for: **backup on host A** â†’ **restore on host B**.
+Designed for: **backup on host A** -> **restore on host B**.
 
 ### Features
 
@@ -220,15 +220,15 @@ Ein CLI-Tool zur Migration von Docker-Containern zwischen Hosts, inklusive:
 - Bind-Mount-Daten
 - Rekonstruktion von Custom Networks
 
-Zielbild: **Backup auf Host A** â†’ **Restore auf Host B**.
+Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 
 ### Funktionen
 
-- Plan-Modus vor AusfÃ¼hrung (`plan`)
-- Dry-Run fÃ¼r Backup/Restore
+- Plan-Modus vor Ausführung (`plan`)
+- Dry-Run für Backup/Restore
 - Archiv-Validierung (`backup --verify`, `verify --in ...`)
-- Bind-Policy: Restore benÃ¶tigt `--bind-root`, wenn Bind-Mounts enthalten sind
-- Dedup fÃ¼r Binds (gleicher Host-Pfad wird einmal archiviert)
+- Bind-Policy: Restore benötigt `--bind-root`, wenn Bind-Mounts enthalten sind
+- Dedup für Binds (gleicher Host-Pfad wird einmal archiviert)
 - Erweiterter Restore:
   - Labels, User, Workdir
   - Network Mode + Multi-Network Reconnect
@@ -237,12 +237,12 @@ Zielbild: **Backup auf Host A** â†’ **Restore auf Host B**.
 - Optionales Image-Archiv im Backup (`--include-images`, Standard: aus)
 - Automatisches Nachziehen fehlender Images beim Restore (`--pull-missing-images`)
 - Zielprofil-Autoerkennung + Override (`--target ...`)
-- Vorab-Prï¿½fung mit `doctor`
+- Vorab-Pr?fung mit `doctor`
 
 ### Voraussetzungen
 
 - Docker CLI + laufender Docker-Daemon
-- Go (nur fÃ¼rs lokale Build)
+- Go (nur fürs lokale Build)
 
 ### Build
 
@@ -299,11 +299,11 @@ dockermigrate version
 ./dockermigrate backup --out backup.tar.gz --containers adguardhome
 ```
 
-NÃ¼tzliche Optionen:
+Nützliche Optionen:
 - `--dry-run`
 - `--verify`
 - Standard: laufende, selektierte Container werden vor Backup gestoppt und bleiben gestoppt
-- `--no-stop` fÃ¼r Backup ohne Stop
+- `--no-stop` für Backup ohne Stop
 - `--bind-exclude` (mehrfach nutzbar)
 
 Beispiel:
@@ -331,7 +331,7 @@ Beispiel:
 Doctor prüft:
 - Docker-Daemon-Erreichbarkeit und Engine-Infos
 - Host-Runtime + aufgelöstes Zielprofil/Zielplattform
-- Optional mit Backup (`--in`) Kompatibilitätschecks:
+- Optional mit Backup (`--in`) Kompatibilit?checks:
   - Backup-Plattform vs. Zielplattform
   - Risiko-Hinweise (z. B. `network_mode=host`, `privileged=true`)
 
@@ -351,8 +351,8 @@ Restore-Hinweise:
 - Bind-Pfade werden unterhalb von `bind-root` gespiegelt
 - `--pull-missing-images` zieht fehlende Images anhand der Manifest-Referenzen nach
 - Fehlt `images/images.tar`, wechselt Restore automatisch in den Pull-Modus
-- `--target` wï¿½hlt das Ziel-Plattformprofil (Standard: `auto`)
-- FÃ¼r systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhÃ¶hte Rechte nÃ¶tig:
+- `--target` wählt das Ziel-Plattformprofil (Standard: `auto`)
+- Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
 Beispiel:
@@ -396,19 +396,19 @@ backup.tar.gz
 ### Sicherheit / Betrieb
 
 - Tar-Extraction ist gegen Path Traversal abgesichert
-- Docker-Socket-Binds werden standardmÃ¤ÃŸig ausgeschlossen:
+- Docker-Socket-Binds werden standardmäßig ausgeschlossen:
   - `/var/run/docker.sock`
   - `/run/docker.sock`
-- FÃ¼r Produktion immer erst mit `plan` + `--dry-run` testen
+- Für Produktion immer erst mit `plan` + `--dry-run` testen
 
-### Hinweise fÃ¼r macOS als Zielsystem
+### Hinweise für macOS als Zielsystem
 
-- `dockermigrate-darwin-amd64` ist fÃ¼r Intel-Macs.
-- FÃ¼r Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
-- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 Ã¼bertragbar.
-- FÃ¼r Restore besser einen macOS-Pfad verwenden, z. B.:
+- `dockermigrate-darwin-amd64` ist für Intel-Macs.
+- Für Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
+- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 übertragbar.
+- Für Restore besser einen macOS-Pfad verwenden, z. B.:
   - `--bind-root /Users/<user>/docker-restore`
-- PrÃ¼fen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
+- Prüfen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
 - Einige Linux-Netzwerkmodi/-Features (v. a. `host`) verhalten sich auf macOS anders.
 
 ### Release-Artefakte
