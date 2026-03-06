@@ -353,8 +353,8 @@ Restore-Hinweise:
 - Bind-Pfade werden unterhalb von `bind-root` gespiegelt
 - `--pull-missing-images` zieht fehlende Images anhand der Manifest-Referenzen nach
 - Fehlt `images/images.tar`, wechselt Restore automatisch in den Pull-Modus
-- `--target` w�hlt das Ziel-Plattformprofil (Standard: `auto`)
-- F�r systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erh�hte Rechte n�tig:
+- `--target` wählt das Ziel-Plattformprofil (Standard: `auto`)
+- Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
 Beispiel:
