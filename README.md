@@ -111,6 +111,25 @@ Example:
 ./dockermigrate verify --in backup.tar.gz
 ```
 
+#### `doctor`
+```bash
+./dockermigrate doctor
+./dockermigrate doctor --target auto
+./dockermigrate doctor --in backup.tar.gz --target mac-silicon
+```
+
+Doctor checks:
+- Docker daemon reachability and engine info
+- Host runtime + resolved target profile/platform
+- Optional backup compatibility checks (`--in`):
+  - backup platform vs target platform
+  - risky settings hints (e.g. `network_mode=host`, `privileged=true`)
+
+Result status:
+- `GREEN` = good to proceed
+- `YELLOW` = proceed with caution (warnings)
+- `RED` = blocking issue (exit code 1)
+
 #### `restore`
 ```bash
 ./dockermigrate restore --in backup.tar.gz --bind-root /
@@ -301,6 +320,25 @@ Beispiel:
 ```bash
 ./dockermigrate verify --in backup.tar.gz
 ```
+
+#### `doctor`
+```bash
+./dockermigrate doctor
+./dockermigrate doctor --target auto
+./dockermigrate doctor --in backup.tar.gz --target mac-silicon
+```
+
+Doctor prüft:
+- Docker-Daemon-Erreichbarkeit und Engine-Infos
+- Host-Runtime + aufgelöstes Zielprofil/Zielplattform
+- Optional mit Backup (`--in`) Kompatibilitätschecks:
+  - Backup-Plattform vs. Zielplattform
+  - Risiko-Hinweise (z. B. `network_mode=host`, `privileged=true`)
+
+Ergebnisstatus:
+- `GREEN` = bereit für Restore
+- `YELLOW` = Restore möglich, aber mit Warnungen
+- `RED` = blockierendes Problem (Exit-Code 1)
 
 #### `restore`
 ```bash
