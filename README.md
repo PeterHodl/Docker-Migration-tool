@@ -5,7 +5,7 @@
 A CLI tool to migrate Docker containers between hosts, including:
 
 - Container configuration (`docker inspect`)
-- Images
+- Image references (optional image tar)
 - Named volumes
 - Bind mount data
 - Custom network recreation
@@ -24,7 +24,10 @@ Designed for: **backup on host A** → **restore on host B**.
   - Network mode + multi-network reconnect
   - Extra hosts
   - CapAdd / CapDrop
-- Optional pull of missing images (`--pull-missing-images`)
+- Optional image archive in backup (`--include-images`, default: off)
+- Automatic pull for missing images on restore (`--pull-missing-images`)
+- Target profile auto-detection + override (`--target ...`)
+- Preflight diagnostics via `doctor`
 
 ### Requirements
 
@@ -49,10 +52,14 @@ Artifacts are written to `releases/`.
 
 ```text
 dockermigrate backup   --out backup.tar.gz [--containers c1,c2 | --all | --label key=value]
-                      [--include-binds] [--bind-exclude PATTERN ...] [--dry-run]
+                      [--include-binds] [--include-images] [--bind-exclude PATTERN ...] [--dry-run]
                       [--no-stop] [--verify]
 
 dockermigrate restore  --in backup.tar.gz --bind-root /some/root [--dry-run] [--pull-missing-images]
+                      [--target auto|linux-arm64|linux-amd64|mac-silicon|mac-intel|windows-amd64]
+
+dockermigrate doctor   [--in backup.tar.gz]
+                      [--target auto|linux-arm64|linux-amd64|mac-silicon|mac-intel|windows-amd64]
 
 dockermigrate plan     [--containers c1,c2 | --all | --label key=value]
                       [--include-binds] [--bind-exclude PATTERN ...] [--json]
@@ -113,7 +120,9 @@ Restore notes:
 - Existing target containers are replaced (`docker rm -f <name>`)
 - `--bind-root` is required when binds are present
 - Bind path mirroring happens under `bind-root`
-- `--pull-missing-images` pulls missing images after `docker load`
+- `--pull-missing-images` pulls missing images from manifest references
+- If `images/images.tar` is missing, restore automatically switches to pull mode
+- `--target` chooses target platform profile (default: `auto`)
 - For system-level paths (`/data`, `/opt`, `/var/lib/...`), elevated privileges are often required:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
@@ -122,6 +131,7 @@ Example:
 ./dockermigrate restore \
   --in backup.tar.gz \
   --bind-root / \
+  --target auto \
   --pull-missing-images
 ```
 
@@ -186,7 +196,7 @@ backup.tar.gz
 Ein CLI-Tool zur Migration von Docker-Containern zwischen Hosts, inklusive:
 
 - Container-Konfiguration (`docker inspect`)
-- Images
+- Image-Referenzen (optionales Image-Tar)
 - Named Volumes
 - Bind-Mount-Daten
 - Rekonstruktion von Custom Networks
@@ -205,7 +215,10 @@ Zielbild: **Backup auf Host A** → **Restore auf Host B**.
   - Network Mode + Multi-Network Reconnect
   - Extra Hosts
   - CapAdd / CapDrop
-- Optionales Nachziehen fehlender Images (`--pull-missing-images`)
+- Optionales Image-Archiv im Backup (`--include-images`, Standard: aus)
+- Automatisches Nachziehen fehlender Images beim Restore (`--pull-missing-images`)
+- Zielprofil-Autoerkennung + Override (`--target ...`)
+- Vorab-Pr�fung mit `doctor`
 
 ### Voraussetzungen
 
@@ -230,10 +243,14 @@ Artefakte liegen in `releases/`.
 
 ```text
 dockermigrate backup   --out backup.tar.gz [--containers c1,c2 | --all | --label key=value]
-                      [--include-binds] [--bind-exclude PATTERN ...] [--dry-run]
+                      [--include-binds] [--include-images] [--bind-exclude PATTERN ...] [--dry-run]
                       [--no-stop] [--verify]
 
 dockermigrate restore  --in backup.tar.gz --bind-root /some/root [--dry-run] [--pull-missing-images]
+                      [--target auto|linux-arm64|linux-amd64|mac-silicon|mac-intel|windows-amd64]
+
+dockermigrate doctor   [--in backup.tar.gz]
+                      [--target auto|linux-arm64|linux-amd64|mac-silicon|mac-intel|windows-amd64]
 
 dockermigrate plan     [--containers c1,c2 | --all | --label key=value]
                       [--include-binds] [--bind-exclude PATTERN ...] [--json]
@@ -294,7 +311,9 @@ Restore-Hinweise:
 - Existierende Ziel-Container werden ersetzt (`docker rm -f <name>`)
 - `--bind-root` ist Pflicht, wenn Bind-Mounts enthalten sind
 - Bind-Pfade werden unterhalb von `bind-root` gespiegelt
-- `--pull-missing-images` zieht fehlende Images nach `docker load`
+- `--pull-missing-images` zieht fehlende Images anhand der Manifest-Referenzen nach
+- Fehlt `images/images.tar`, wechselt Restore automatisch in den Pull-Modus
+- `--target` w�hlt das Ziel-Plattformprofil (Standard: `auto`)
 - Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
@@ -303,6 +322,7 @@ Beispiel:
 ./dockermigrate restore \
   --in backup.tar.gz \
   --bind-root / \
+  --target auto \
   --pull-missing-images
 ```
 

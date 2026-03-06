@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.11.0
+
+- Backup now skips image tar by default (cross-platform friendly):
+  - new optional flag `--include-images` to embed `images/images.tar`
+- Restore now supports image-less backups automatically:
+  - if `images/images.tar` is missing, restore switches to pull mode
+  - pulls missing images from manifest refs with target platform handling
+- `verify` accepts archives without `images/images.tar`
+
+## v0.10.0
+
+- Added restore target profile support:
+  - `--target auto|linux-arm64|linux-amd64|mac-silicon|mac-intel|windows-amd64`
+  - platform-aware `docker run --platform ...` and pull behavior
+- Added `doctor` command for preflight checks:
+  - host/runtime + docker connectivity
+  - optional backup compatibility checks (`--in`)
+  - risk hints for host networking / privileged mode
+
 ## v0.9.0
 
 - Changed backup default behavior:
