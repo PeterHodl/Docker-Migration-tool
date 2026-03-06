@@ -153,15 +153,15 @@ Example:
 
 ```text
 backup.tar.gz
-├── manifest.json
-├── containers/
-│   └── <container>.inspect.json
-├── images/
-│   └── images.tar
-├── volumes/
-│   └── <volume>.tar
-└── binds/
-    └── _<host_path_as_filename>.tar
+|-- manifest.json
+|-- containers/
+|   `-- <container>.inspect.json
+|-- images/
+|   `-- images.tar (optional)
+|-- volumes/
+|   `-- <volume>.tar
+`-- binds/
+    `-- _<host_path_as_filename>.tar
 ```
 
 ### Security / Operations
@@ -218,7 +218,7 @@ Zielbild: **Backup auf Host A** → **Restore auf Host B**.
 - Optionales Image-Archiv im Backup (`--include-images`, Standard: aus)
 - Automatisches Nachziehen fehlender Images beim Restore (`--pull-missing-images`)
 - Zielprofil-Autoerkennung + Override (`--target ...`)
-- Vorab-Pr�fung mit `doctor`
+- Vorab-Pr�fung mit `doctor`
 
 ### Voraussetzungen
 
@@ -313,7 +313,7 @@ Restore-Hinweise:
 - Bind-Pfade werden unterhalb von `bind-root` gespiegelt
 - `--pull-missing-images` zieht fehlende Images anhand der Manifest-Referenzen nach
 - Fehlt `images/images.tar`, wechselt Restore automatisch in den Pull-Modus
-- `--target` w�hlt das Ziel-Plattformprofil (Standard: `auto`)
+- `--target` w�hlt das Ziel-Plattformprofil (Standard: `auto`)
 - Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
 
@@ -344,15 +344,15 @@ Beispiel:
 
 ```text
 backup.tar.gz
-├── manifest.json
-├── containers/
-│   └── <container>.inspect.json
-├── images/
-│   └── images.tar
-├── volumes/
-│   └── <volume>.tar
-└── binds/
-    └── _<host_path_as_filename>.tar
+|-- manifest.json
+|-- containers/
+|   `-- <container>.inspect.json
+|-- images/
+|   `-- images.tar (optional)
+|-- volumes/
+|   `-- <volume>.tar
+`-- binds/
+    `-- _<host_path_as_filename>.tar
 ```
 
 ### Sicherheit / Betrieb
