@@ -226,11 +226,11 @@ Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 
 ### Funktionen
 
-- Plan-Modus vor Ausf�hrung (`plan`)
-- Dry-Run f�r Backup/Restore
+- Plan-Modus vor Ausführung (`plan`)
+- Dry-Run für Backup/Restore
 - Archiv-Validierung (`backup --verify`, `verify --in ...`)
-- Bind-Policy: Restore ben�tigt `--bind-root`, wenn Bind-Mounts enthalten sind
-- Dedup f�r Binds (gleicher Host-Pfad wird einmal archiviert)
+- Bind-Policy: Restore benötigt `--bind-root`, wenn Bind-Mounts enthalten sind
+- Dedup für Binds (gleicher Host-Pfad wird einmal archiviert)
 - Erweiterter Restore:
   - Labels, User, Workdir
   - Network Mode + Multi-Network Reconnect
@@ -239,12 +239,12 @@ Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 - Optionales Image-Archiv im Backup (`--include-images`, Standard: aus)
 - Automatisches Nachziehen fehlender Images beim Restore (`--pull-missing-images`)
 - Zielprofil-Autoerkennung + Override (`--target ...`)
-- Vorab-Pr?fung mit `doctor`
+- Vorab-Prüfung mit `doctor`
 
 ### Voraussetzungen
 
 - Docker CLI + laufender Docker-Daemon
-- Go (nur f�rs lokale Build)
+- Go (nur fürs lokale Build)
 
 ### Build
 
@@ -301,11 +301,11 @@ dockermigrate version
 ./dockermigrate backup --out backup.tar.gz --containers adguardhome
 ```
 
-N�tzliche Optionen:
+Nützliche Optionen:
 - `--dry-run`
 - `--verify`
 - Standard: laufende, selektierte Container werden vor Backup gestoppt und bleiben gestoppt
-- `--no-stop` f�r Backup ohne Stop
+- `--no-stop` für Backup ohne Stop
 - `--bind-exclude` (mehrfach nutzbar)
 
 Beispiel:
@@ -338,8 +338,8 @@ Doctor prüft:
   - Risiko-Hinweise (z. B. `network_mode=host`, `privileged=true`)
 
 Ergebnisstatus:
-- `GREEN` = bereit f�r Restore
-- `YELLOW` = Restore m�glich, aber mit Warnungen
+- `GREEN` = bereit für Restore
+- `YELLOW` = Restore möglich, aber mit Warnungen
 - `RED` = blockierendes Problem (Exit-Code 1)
 
 #### `restore`
@@ -398,19 +398,19 @@ backup.tar.gz
 ### Sicherheit / Betrieb
 
 - Tar-Extraction ist gegen Path Traversal abgesichert
-- Docker-Socket-Binds werden standardm��ig ausgeschlossen:
+- Docker-Socket-Binds werden standardmäßig ausgeschlossen:
   - `/var/run/docker.sock`
   - `/run/docker.sock`
-- F�r Produktion immer erst mit `plan` + `--dry-run` testen
+- Für Produktion immer erst mit `plan` + `--dry-run` testen
 
-### Hinweise f�r macOS als Zielsystem
+### Hinweise für macOS als Zielsystem
 
-- `dockermigrate-darwin-amd64` ist f�r Intel-Macs.
-- F�r Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
-- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 �bertragbar.
-- F�r Restore besser einen macOS-Pfad verwenden, z. B.:
+- `dockermigrate-darwin-amd64` ist für Intel-Macs.
+- Für Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
+- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 Übertragbar.
+- Für Restore besser einen macOS-Pfad verwenden, z. B.:
   - `--bind-root /Users/<user>/docker-restore`
-- Pr�fen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
+- Prüfen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
 - Einige Linux-Netzwerkmodi/-Features (v. a. `host`) verhalten sich auf macOS anders.
 
 ### Release-Artefakte
