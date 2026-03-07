@@ -11,3 +11,6 @@
 # Keep proprietary source/build internals out of public repo
 /main.go
 /scripts/build-release.sh
+
+# Local recovery artifacts
+/recovery/
