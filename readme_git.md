@@ -29,6 +29,10 @@ Designed for: **backup on host A** -> **restore on host B**.
 - Target profile auto-detection + override (`--target ...`)
 - Preflight diagnostics via `doctor`
 
+### Requirements
+
+- Docker CLI + running Docker daemon
+
 ### CLI
 
 ```text
@@ -225,21 +229,6 @@ Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 ### Voraussetzungen
 
 - Docker CLI + laufender Docker-Daemon
-- Go (nur fürs lokale Build)
-
-### Build
-
-```bash
-go build -o dockermigrate main.go
-```
-
-Multi-OS Build:
-
-```bash
-bash scripts/build-release.sh
-```
-
-Artefakte liegen in `releases/`.
 
 ### CLI
 
