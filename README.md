@@ -229,21 +229,6 @@ Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 ### Voraussetzungen
 
 - Docker CLI + laufender Docker-Daemon
-- Go (nur fürs lokale Build)
-
-### Build
-
-```bash
-go build -o dockermigrate main.go
-```
-
-Multi-OS Build:
-
-```bash
-bash scripts/build-release.sh
-```
-
-Artefakte liegen in `releases/`.
 
 ### CLI
 
