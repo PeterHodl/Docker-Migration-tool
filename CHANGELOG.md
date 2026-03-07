@@ -2,12 +2,22 @@
 
 ## v0.11.0
 
-- Backup now skips image tar by default (cross-platform friendly):
-  - new optional flag `--include-images` to embed `images/images.tar`
-- Restore now supports image-less backups automatically:
-  - if `images/images.tar` is missing, restore switches to pull mode
-  - pulls missing images from manifest refs with target platform handling
-- `verify` accepts archives without `images/images.tar`
+- Backup workflow update:
+  - default behavior stops selected running containers before backup and keeps them stopped
+  - new flag `--no-stop` keeps containers running during backup
+- Image handling update:
+  - image archive is now optional by default (no `images/images.tar` unless requested)
+  - new flag `--include-images` enables image archive creation in backup
+- Verification improvements:
+  - `backup --verify` available again
+  - `verify --in <backup.tar.gz>` available again
+  - verify accepts archives without `images/images.tar`
+- Restore compatibility improvements:
+  - restore works when backup has no `images/images.tar` (skips `docker load`)
+  - optional `--pull-missing-images` can fetch required images from manifest refs
+- Platform / diagnostics:
+  - restore target profiles supported via `--target ...`
+  - `doctor` command available for preflight checks (`--in`, `--target`)
 
 ## v0.10.0
 
