@@ -17,3 +17,6 @@
 
 # Local-only docs
 /readme_local.md
+
+# Release template should not be versioned
+/releases/RELEASE_TEMPLATE.md
