@@ -203,9 +203,9 @@ Ein CLI-Tool zur Migration von Docker-Containern zwischen Hosts, inklusive:
 
 - Container-Konfiguration (`docker inspect`)
 - Image-Referenzen (optionales Image-Tar)
-- Named Volumes
+- Zugeordneter Volumen
 - Bind-Mount-Daten
-- Rekonstruktion von Custom Networks
+- Rekonstruktion von Benutzerspezifischen Netzwerkeinstellungen
 
 Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 
