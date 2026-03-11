@@ -28,6 +28,25 @@ Designed for: **backup on host A** -> **restore on host B**.
 - Automatic pull for missing images on restore (`--pull-missing-images`)
 - Target profile auto-detection + override (`--target ...`)
 - Preflight diagnostics via `doctor`
+
+### Built-in GUI
+
+A lightweight web UI is built into the same binary (no extra installation/runtime).
+
+```bash
+./dockermigrate gui
+./dockermigrate gui 9080
+./dockermigrate gui --listen 0.0.0.0:9080
+```
+
+GUI highlights:
+- Backup / Restore / Verify via browser
+- Restore safety check for `bind-root=/`
+- Automatic backup naming from selected container (`<container>.tar.gz`)
+- Backup file dropdown for restore
+
+![GUI Preview](docs/gui-preview.jpg)
+
 - Built-in install-free web GUI (`gui`) for backup/restore/verify
 
 ### Requirements
@@ -240,6 +259,24 @@ Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
 - Zielprofil-Autoerkennung + Override (`--target ...`)
 - Vorab-Prüfung mit `doctor`
 
+### Integrierte GUI
+
+Eine schlanke Web-Oberfläche ist direkt in derselben Binary enthalten (keine zusätzliche Installation/Laufzeitumgebung nötig).
+
+```bash
+./dockermigrate gui
+./dockermigrate gui 9080
+./dockermigrate gui --listen 0.0.0.0:9080
+```
+
+GUI-Highlights:
+- Backup / Restore / Verify im Browser
+- Sicherheitscheck für Restore mit `bind-root=/`
+- Automatische Backup-Namensvergabe aus Container-Auswahl (`<container>.tar.gz`)
+- Backup-Dropdown für Restore-Auswahl
+
+![GUI Vorschau](docs/gui-preview.jpg)
+
 ### Voraussetzungen
 
 - Docker CLI + laufender Docker-Daemon
@@ -335,9 +372,9 @@ Ergebnisstatus:
 ```
 
 GUI-Hinweise:
-- L�uft in derselben Binary (keine Zusatzinstallation)
-- Browser �ffnen auf `http://127.0.0.1:8080` (Standard)
-- F�r LAN-Zugriff `--listen 0.0.0.0:<port>` verwenden
+- Läuft in derselben Binary (keine Zusatzinstallation)
+- Browser öffnen auf `http://127.0.0.1:8080` (Standard)
+- Für LAN-Zugriff `--listen 0.0.0.0:<port>` verwenden
 
 #### `restore`
 ```bash
