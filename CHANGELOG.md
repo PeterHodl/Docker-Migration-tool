@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.12.0
+
+- Added install-free local web GUI via `dockermigrate gui`
+  - built-in HTML UI in the same binary (no extra runtime)
+  - backup / restore / verify actions from browser
+- GUI network support:
+  - `--listen 0.0.0.0:<port>` for LAN access
+  - short port form: `dockermigrate gui 9080`
+- GUI safety and UX improvements:
+  - restore safety confirmation for `bind-root=/`
+  - backup directory input and automatic backup filename generation from selected container (`<container>.tar.gz`)
+  - backup selector for restore path (`*.tar.gz` in selected folder)
+  - automatic container list load + dropdown selection
+  - modernized dark UI theme
+- Restore fix for entrypoint handling:
+  - correctly maps JSON entrypoint arrays to Docker run (`--entrypoint <bin>` + trailing args)
+
 ## v0.11.0
 
 - Backup workflow update:

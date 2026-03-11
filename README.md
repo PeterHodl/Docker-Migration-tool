@@ -28,6 +28,7 @@ Designed for: **backup on host A** -> **restore on host B**.
 - Automatic pull for missing images on restore (`--pull-missing-images`)
 - Target profile auto-detection + override (`--target ...`)
 - Preflight diagnostics via `doctor`
+- Built-in install-free web GUI (`gui`) for backup/restore/verify
 
 ### Requirements
 
@@ -51,6 +52,7 @@ dockermigrate plan     [--containers c1,c2 | --all | --label key=value]
 
 dockermigrate ls       [--all]
 dockermigrate verify   --in backup.tar.gz
+dockermigrate gui      [port] [--listen 127.0.0.1:8080]
 dockermigrate version
 ```
 
@@ -114,6 +116,18 @@ Result status:
 - `GREEN` = good to proceed
 - `YELLOW` = proceed with caution (warnings)
 - `RED` = blocking issue (exit code 1)
+
+#### `gui`
+```bash
+./dockermigrate gui
+./dockermigrate gui 9080
+./dockermigrate gui --listen 0.0.0.0:9080
+```
+
+GUI notes:
+- Runs inside the same binary (no extra install/runtime)
+- Open browser on `http://127.0.0.1:8080` (default)
+- Use `--listen 0.0.0.0:<port>` for LAN access
 
 #### `restore`
 ```bash
@@ -248,6 +262,7 @@ dockermigrate plan     [--containers c1,c2 | --all | --label key=value]
 
 dockermigrate ls       [--all]
 dockermigrate verify   --in backup.tar.gz
+dockermigrate gui      [port] [--listen 127.0.0.1:8080]
 dockermigrate version
 ```
 
@@ -311,6 +326,18 @@ Ergebnisstatus:
 - `GREEN` = bereit fÃ¼r Restore
 - `YELLOW` = Restore mÃ¶glich, aber mit Warnungen
 - `RED` = blockierendes Problem (Exit-Code 1)
+
+#### `gui`
+```bash
+./dockermigrate gui
+./dockermigrate gui 9080
+./dockermigrate gui --listen 0.0.0.0:9080
+```
+
+GUI-Hinweise:
+- Läuft in derselben Binary (keine Zusatzinstallation)
+- Browser öffnen auf `http://127.0.0.1:8080` (Standard)
+- Für LAN-Zugriff `--listen 0.0.0.0:<port>` verwenden
 
 #### `restore`
 ```bash
