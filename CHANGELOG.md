@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.13.0
+
+- Version bump und Release-Rebuild.
+
 ## v0.12.0
 
 - Added install-free local web GUI via `dockermigrate gui`

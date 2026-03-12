@@ -1,4 +1,4 @@
-# Docker Migration Tool v0.12.0
+# Docker Migration Tool v0.13.0
 
 `dockermigrate` ist ein CLI-Tool, um Docker-Container inkl. Daten sauber zwischen Hosts zu migrieren.
 
