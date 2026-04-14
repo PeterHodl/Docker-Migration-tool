@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.14.0
+
+- GUI localization: translated built-in web GUI labels, buttons, status messages, and safety prompts to English.
+- GUI consistency improvements:
+  - unified backup/restore selectors and folder dialog wording
+  - standardized status wording (`ready` / `running`)
+- Documentation updates:
+  - README and local README updated for GUI usage and wording consistency
+  - German section language cleanup and terminology harmonization
+- Release refresh: rebuilt all platform artifacts and checksums for v0.14.0.
+
 ## v0.13.0
 
 - Version bump und Release-Rebuild.

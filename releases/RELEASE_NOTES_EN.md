@@ -1,29 +1,20 @@
-# Docker Migration Tool v0.13.0
+# Docker Migration Tool v0.14.0
 
 `dockermigrate` is a CLI tool to migrate Docker containers (including data) between hosts safely and reproducibly.
 
 ## Highlights
 
-- New built-in install-free web GUI (`dockermigrate gui`)
-  - backup / restore / verify directly in browser
-  - optional LAN access (`--listen 0.0.0.0:<port>`)
-  - restore safety confirmation for `bind-root=/`
-  - automatic backup naming from selected container (`<container>.tar.gz`)
-- Backup/restore of:
-  - Container configuration
-  - Images
-  - Named volumes
-  - Bind mount data
-- Plan mode + dry-run for safe execution
-- Archive validation (`verify`, `backup --verify`)
-- Extended restore support:
-  - Labels, user, workdir
-  - Network mode + multi-network reconnect
-  - Extra hosts, cap-add, cap-drop
-- Optional pull of missing images:
-  - `--pull-missing-images`
-- Network metadata persisted in backups:
-  - Driver, subnet, gateway (IPAM)
+- GUI localization update:
+  - built-in web UI now uses English labels/messages consistently
+  - translated safety confirmation and runtime status texts
+- GUI UX consistency improvements:
+  - unified wording for container/backup selection
+  - folder picker labels cleaned up
+  - standardized action labels for backup/restore/verify
+- Documentation refresh:
+  - README and local README aligned with current GUI behavior
+  - German section wording polished for consistency
+- Full release rebuild for all artifacts + new checksums
 
 ## Artifacts
 

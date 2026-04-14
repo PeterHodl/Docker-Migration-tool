@@ -236,32 +236,32 @@ Ein CLI-Tool zur Migration von Docker-Containern zwischen Hosts, inklusive:
 
 - Container-Konfiguration (`docker inspect`)
 - Image-Referenzen (optionales Image-Tar)
-- Zugeordneter Volumen
+- Zugeordnete Volumes
 - Bind-Mount-Daten
-- Rekonstruktion von Benutzerspezifischen Netzwerkeinstellungen
+- Rekonstruktion benutzerspezifischer Netzwerkeinstellungen
 
-Zielbild: **Backup auf Host A** -> **Restore auf Host B**.
+Zielbild: **Sicherung auf Host A** -> **Wiederherstellung auf Host B**.
 
 ### Funktionen
 
 - Plan-Modus vor Ausführung (`plan`)
-- Dry-Run für Backup/Restore
+- Dry-Run für Sicherung/Wiederherstellung
 - Archiv-Validierung (`backup --verify`, `verify --in ...`)
-- Bind-Policy: Restore benötigt `--bind-root`, wenn Bind-Mounts enthalten sind
-- Dedup für Binds (gleicher Host-Pfad wird einmal archiviert)
-- Erweiterter Restore:
+- Bind-Richtlinie: Für die Wiederherstellung ist `--bind-root` erforderlich, wenn Bind-Mounts enthalten sind
+- Deduplizierung von Bind-Mounts (gleicher Host-Pfad wird nur einmal archiviert)
+- Erweiterte Wiederherstellung:
   - Labels, User, Workdir
   - Network Mode + Multi-Network Reconnect
   - Extra Hosts
   - CapAdd / CapDrop
 - Optionales Image-Archiv im Backup (`--include-images`, Standard: aus)
-- Automatisches Nachziehen fehlender Images beim Restore (`--pull-missing-images`)
-- Zielprofil-Autoerkennung + Override (`--target ...`)
+- Automatisches Nachziehen fehlender Images bei der Wiederherstellung (`--pull-missing-images`)
+- Zielprofil-Autoerkennung + manuelles Override (`--target ...`)
 - Vorab-Prüfung mit `doctor`
 
 ### Integrierte GUI
 
-Eine schlanke Web-Oberfläche ist direkt in derselben Binary enthalten (keine zusätzliche Installation/Laufzeitumgebung nötig).
+Eine schlanke Web-Oberfläche ist direkt in derselben Binärdatei enthalten (keine zusätzliche Installation oder Laufzeitumgebung nötig).
 
 ```bash
 ./dockermigrate gui
@@ -270,12 +270,13 @@ Eine schlanke Web-Oberfläche ist direkt in derselben Binary enthalten (keine zu
 ```
 
 GUI-Highlights:
-- Backup / Restore / Verify im Browser
-- Sicherheitscheck für Restore mit `bind-root=/`
-- Automatische Backup-Namensvergabe aus Container-Auswahl (`<container>.tar.gz`)
-- Backup-Dropdown für Restore-Auswahl
+- Sichern / Wiederherstellen / Verifizieren im Browser
+- Sicherheitscheck für Wiederherstellung mit `bind-root=/`
+- Automatische Backup-Namensvergabe aus der Container-Auswahl (`<container>.tar.gz`)
+- Sicherungsdatei-Auswahl per Dropdown im Wiederherstellungsbereich
+- GUI-Texte sind aktuell auf Englisch
 
-![GUI Vorschau](docs/gui-preview.jpg)
+![GUI Preview](docs/gui-preview.jpg)
 
 ### Voraussetzungen
 
@@ -354,14 +355,14 @@ Beispiel:
 
 Doctor prüft:
 - Docker-Daemon-Erreichbarkeit und Engine-Infos
-- Host-Runtime + aufgelöstes Zielprofil/Zielplattform
+- Host-Laufzeit + aufgelöstes Zielprofil/Zielplattform
 - Optional mit Backup (`--in`) Kompatibilitätschecks:
   - Backup-Plattform vs. Zielplattform
   - Risiko-Hinweise (z. B. `network_mode=host`, `privileged=true`)
 
 Ergebnisstatus:
-- `GREEN` = bereit für Restore
-- `YELLOW` = Restore möglich, aber mit Warnungen
+- `GREEN` = bereit für die Wiederherstellung
+- `YELLOW` = Wiederherstellung möglich, aber mit Warnungen
 - `RED` = blockierendes Problem (Exit-Code 1)
 
 #### `gui`
@@ -372,7 +373,7 @@ Ergebnisstatus:
 ```
 
 GUI-Hinweise:
-- Läuft in derselben Binary (keine Zusatzinstallation)
+- Läuft in derselben Binärdatei (keine Zusatzinstallation)
 - Browser öffnen auf `http://127.0.0.1:8080` (Standard)
 - Für LAN-Zugriff `--listen 0.0.0.0:<port>` verwenden
 
@@ -381,12 +382,12 @@ GUI-Hinweise:
 ./dockermigrate restore --in backup.tar.gz --bind-root /
 ```
 
-Restore-Hinweise:
+Hinweise zur Wiederherstellung:
 - Existierende Ziel-Container werden ersetzt (`docker rm -f <name>`)
 - `--bind-root` ist Pflicht, wenn Bind-Mounts enthalten sind
 - Bind-Pfade werden unterhalb von `bind-root` gespiegelt
 - `--pull-missing-images` zieht fehlende Images anhand der Manifest-Referenzen nach
-- Fehlt `images/images.tar`, wechselt Restore automatisch in den Pull-Modus
+- Fehlt `images/images.tar`, wechselt die Wiederherstellung automatisch in den Pull-Modus
 - `--target` wählt das Ziel-Plattformprofil (Standard: `auto`)
 - Für systemnahe Pfade (`/data`, `/opt`, `/var/lib/...`) sind oft erhöhte Rechte nötig:
   - `sudo ./dockermigrate restore --in backup.tar.gz --bind-root /`
@@ -431,7 +432,7 @@ backup.tar.gz
 
 ### Sicherheit / Betrieb
 
-- Tar-Extraction ist gegen Path Traversal abgesichert
+- Das Entpacken von Tar-Archiven ist gegen Path Traversal abgesichert
 - Docker-Socket-Binds werden standardmäßig ausgeschlossen:
   - `/var/run/docker.sock`
   - `/run/docker.sock`
@@ -441,17 +442,17 @@ backup.tar.gz
 
 - `dockermigrate-darwin-amd64` ist für Intel-Macs.
 - Für Apple Silicon (M1/M2/M3) ist ein nativer arm64-Build (`darwin-arm64`) empfehlenswert.
-- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 Übertragbar.
-- Für Restore besser einen macOS-Pfad verwenden, z. B.:
+- Docker Desktop auf macOS nutzt eine VM; Linux-Hostpfade sind nicht 1:1 übertragbar.
+- Für die Wiederherstellung besser einen macOS-Pfad verwenden, z. B.:
   - `--bind-root /Users/<user>/docker-restore`
-- Prüfen, dass Zielpfade in Docker Desktop als File Sharing freigegeben sind.
+- Prüfen, dass Zielpfade in Docker Desktop als Datei-Freigaben hinterlegt sind.
 - Einige Linux-Netzwerkmodi/-Features (v. a. `host`) verhalten sich auf macOS anders.
 
 ### Release-Artefakte
 
 - `dockermigrate-linux-amd64`
 - `dockermigrate-linux-arm64` (Raspberry Pi / ARM64)
-- `dockermigrate` (linux-arm64 Komfort-Binary)
+- `dockermigrate` (linux-arm64 Komfort-Binärdatei)
 - `dockermigrate-darwin-amd64`
 - `dockermigrate-darwin-arm64`
 - `dockermigrate-windows-amd64.exe`
